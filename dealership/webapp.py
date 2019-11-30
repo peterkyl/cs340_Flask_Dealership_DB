@@ -51,14 +51,10 @@ def add_dealership():
 		return redirect('/');
 
 
-<<<<<<< HEAD
-###########################################################
-=======
 
 
 
 ##############################################################
->>>>>>> retrieve_db_connector
 ### STARTER APP EXAMPLES BELOW
 
 @webapp.route('/add_new_people', methods=['POST','GET'])
