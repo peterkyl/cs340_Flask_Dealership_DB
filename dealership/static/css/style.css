@@ -1,0 +1,109 @@
+/* stylesheet for blog.html*/
+
+body {
+	font-family: "Lucida Console", sans-serif;
+	color: #d0d0d0;
+	background: black;
+	margin: 0;
+	padding: 0;
+}
+
+header {
+	background: #2F2F2F;
+	padding: 5px 0 5px 0;
+}
+
+h1 {
+	font-family: "Courier New";
+	font-size: 50px;
+}
+
+h2 {
+	font-family: "Veranda";
+	font-size: 30px;
+}
+
+p {
+	width: 80%;
+	margin-left: 50px;
+	font-size: 16px;
+	line-height: 1.25em;
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-font-smoothing: antialiased !important;
+	-moz-font-smoothing: antialiased !important;
+	text-rendering: optimizelegibility !important;
+	letter-spacing: .03em;
+}
+
+a {
+	/*margin-left: 50px;*/
+	color: white;
+}
+
+table {
+	border: 1px solid white;
+	margin: 2%;
+	width: 96%;
+}
+
+th {
+	//border: 1px solid white;
+	padding: 15px;
+	text-align: left;
+	color: #FFFF00
+}
+
+td {
+	border: 1px solid white;
+	padding: 10px;
+	text-align: left;
+}
+
+.hidden {
+  display: none;
+}
+
+.dealershipLinks {
+	margin-bottom: 20px;
+}
+
+.backdrop {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.85);
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1010;
+  overflow: scroll;
+}
+
+.modal-dialog {
+  width: auto;
+  max-width: 600px;
+  min-width: 350px;
+  min-height: 300px;
+  margin: 40px auto;
+  background-color: #fff;
+  border-radius: 15px;
+}
+
+.modal-header {
+  position: relative;
+  padding: 10px 20px;
+  color: black;
+}
+
+.modal-body {
+  color: black;
+  padding: 20px;
+}

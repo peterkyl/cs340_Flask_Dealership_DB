@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" media="screen">
+	<title>{% block title %}Generic Dealership Site{% endblock %}</title>
+</head>
+<body>
+	<header>
+		<a href="/">Home</a>
+	</header>
+
+	<div id="dealership_table">
+		{% block dealership_table %}{% endblock %}
+		{% block add_form_dealership %}{% endblock %}
+	</div>
+
+	<div id="employees_table">
+		{% block employees_table %}{% endblock %}
+		{% block add_form_employee %}{% endblock %}
+	</div>
+
+	<div id="vehicles_table">
+		{% block vehicles_table %}{% endblock %}
+		{% block add_form_vehicle %}{% endblock %}
+	</div>
+
+</body>
+</html>

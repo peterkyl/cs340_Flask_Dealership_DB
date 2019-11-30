@@ -1,0 +1,151 @@
+{% extends "main.html" %}
+
+{% block title %}{{ dealership.0.0 }}{% endblock %}
+
+{% block dealership_table %}
+		<table>
+			<tr>
+				<th>dealership_name</th>
+				<th>hours</th>
+				<th>address</th>
+				<th>city</th>
+				<th>zip</th>
+				<th>country</th>
+				<th>num_employees</th>
+				<th>num_vehicles</th>
+			</tr>
+			{% for r in dealership %}
+			<tr>
+				<td>{{ r.0 }}</td>
+				<td>{{ r.1 }}</td>
+				<td>{{ r.2 }} {% if r.3 %}{{ r.3 }}{% endif %}</td>
+				<td>{{ r.4 }}</td>
+				<td>{{ r.5 }}</td>
+				<td>{{ r.6 }}</td>
+				<td>{% if employees.0 %}{{ employees.0.0 }}{% else %}0{% endif %}</td>
+				<td>{% if vehicles.0 %}{{ vehicles.0.0 }}{% else %}0{% endif %}</td>
+				<td><button type="button" onclick="location.href='./update.html'">Update</button></td>
+				<td><button type="button" onclick="location.href='./delete.html'">Delete</button></td>
+			</tr>
+			{% endfor %}
+		</table>
+{% endblock %}
+
+{% block employees_table %}
+	<h3>Employees</h3>
+	<table>
+		<tr>
+			<th>Name</th>
+			<th>Position</th>
+		</tr>
+		{% for e in employees %}
+		<tr>
+			<td>{{ e.1 }} {{ e.2 }}</td>
+			<td>{{ e.3 }}</td>
+		</tr>
+		{% endfor %}
+	</table>
+{% endblock %}
+
+{% block add_form_employee %}
+   <div>
+      <button type="button" id="add-btn-employee">Add</button>
+   </div>
+   <div id="modal-backdrop-employee" class="hidden backdrop"></div>
+   <div id="add-form-modal-employee" class="hidden modal">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <h3>Add an Employee</h3>
+        </div>
+         <div class="modal-body">
+            <form id="add_employee" action="/addEmployee" method="post">
+            First Name: <input type="text" name="fname"><br>
+            Last Name: <input type="text" name="lname"><br>
+            Position: <input type="text" name="position"><br>
+            <input type="submit" value="Submit">
+            </form><br/>
+         </div>
+      </div>
+    </div>
+   <script>
+      var add_btn = document.getElementById('add-btn-employee');
+      add_btn.addEventListener('click', toggleModalEmp)
+      var modal = document.getElementById('add-form-modal-employee');
+      modal.addEventListener('click', modalEventListenerEmp);
+
+      function modalEventListenerEmp(event){
+         if (event.target.id === "add-form-modal-employee")
+            toggleModalEmp();
+      }
+
+      function toggleModalEmp(){
+         var modalBackdrop = document.getElementById('modal-backdrop-employee');
+         var modal = document.getElementById('add-form-modal-employee');
+         modalBackdrop.classList.toggle('hidden');
+         modal.classList.toggle('hidden');
+      }
+   </script>
+{% endblock %}
+
+
+{% block vehicles_table %}
+	<h3>Vehicles</h3>
+	<table>
+		<tr>
+			<th>ID</th>
+			<th>Type</th>
+			<th>vin</th>
+		</tr>
+		{% for v in vehicles %}
+		<tr>
+			<td>{{ v.1 }}</td>
+			<td>{{ v.2 }}</td>
+			<td>{{ v.3 }}</td>
+		</tr>
+		{% endfor %}
+	</table>
+{% endblock %}
+
+{% block add_form_vehicle %}
+   <div>
+      <button type="button" id="add-btn-vehicle">Add</button>
+   </div>
+   <div id="modal-backdrop-vehicle" class="hidden backdrop"></div>
+   <div id="add-form-modal-vehicle" class="hidden modal">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <h3>Add a Vehicle</h3>
+        </div>
+         <div class="modal-body">
+            <form id="add_vehicle" action="/addVehicle" method="post">
+            Type: <select name="type">
+					{% for t in types %}
+						<option value"{{ t.0 }}">{{ p[1] }}</option>
+					{% endfor %}
+				</select><br>
+            VIN: <input type="text" name="vin"><br>
+            <input type="submit" value="Submit">
+            </form><br/>
+         </div>
+      </div>
+    </div>
+   <script>
+      var add_btn = document.getElementById('add-btn-vehicle');
+      add_btn.addEventListener('click', toggleModalVeh)
+      var modal = document.getElementById('add-form-modal-vehicle');
+      modal.addEventListener('click', modalEventListenerVeh);
+
+      function modalEventListenerVeh(event){
+         if (event.target.id === "add-form-modal-vehicle") //if you click on the backdrop it closes the modal
+            toggleModalVeh();
+      }
+
+      function toggleModalVeh(){
+         var modalBackdrop = document.getElementById('modal-backdrop-vehicle');
+         var modal = document.getElementById('add-form-modal-vehicle');
+         modalBackdrop.classList.toggle('hidden');
+         modal.classList.toggle('hidden');
+      }
+   </script>
+{% endblock %}
+
