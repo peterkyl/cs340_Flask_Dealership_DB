@@ -4,14 +4,7 @@ from db_connector.db_connector import connect_to_database, execute_query
 #create the web application
 webapp = Flask(__name__)
 
-#provide a route where requests on the web application can be addressed
-@webapp.route('/hello')
-#provide a view (fancy name for a function) which responds to any requests on this route
-def hello():
-    return "Hello World! And more";
-
 @webapp.route('/')
-#the name of this function is just a cosmetic thing
 def all_dealerships():
     print("Fetching dealerships and rendering Home page")
     db_connection = connect_to_database()
@@ -56,6 +49,10 @@ def add_dealership():
 		execute_query(db_connection, dealership_query, dealership_data)
 		print("inserted dealership");
 		return redirect('/');
+
+
+###########################################################
+### STARTER APP EXAMPLES BELOW
 
 @webapp.route('/add_new_people', methods=['POST','GET'])
 def add_new_people():
