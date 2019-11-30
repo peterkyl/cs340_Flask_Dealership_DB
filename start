@@ -1,0 +1,2 @@
+source ./venv/bin/activate
+gunicorn run:webapp -b 0.0.0.0:5566
