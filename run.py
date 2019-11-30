@@ -6,6 +6,6 @@ from starter_website.webapp import webapp
 #for example, the above line tells to run the sample db connection app in db_connector/ directory
 
 #then from the commandline run:
-#./venv/bin/activate
-#gunicorn run:app -b 0.0.0.0:SOME_NUMBER_BETWEEN_1025_and_65535
-#eg. gunicorn run:app -b 0.0.0.0:8842
+#source ./venv/bin/activate
+#gunicorn run:webapp -b 0.0.0.0:SOME_NUMBER_BETWEEN_1025_and_65535
+#eg. gunicorn run:webapp -b 0.0.0.0:8842
