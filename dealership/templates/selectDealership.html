@@ -1,35 +1,6 @@
-{% extends "main.html" %}
+{% extends "select.html" %}
 
 {% block title %}{{ dealership.0.0 }}{% endblock %}
-
-{% block dealership_table %}
-		<table>
-			<tr>
-				<th>dealership_name</th>
-				<th>hours</th>
-				<th>address</th>
-				<th>city</th>
-				<th>zip</th>
-				<th>country</th>
-				<th>num_employees</th>
-				<th>num_vehicles</th>
-			</tr>
-			{% for r in dealership %}
-			<tr>
-				<td>{{ r.0 }}</td>
-				<td>{{ r.1 }}</td>
-				<td>{{ r.2 }} {% if r.3 %}{{ r.3 }}{% endif %}</td>
-				<td>{{ r.4 }}</td>
-				<td>{{ r.5 }}</td>
-				<td>{{ r.6 }}</td>
-				<td>{% if employees.0 %}{{ employees.0.0 }}{% else %}0{% endif %}</td>
-				<td>{% if vehicles.0 %}{{ vehicles.0.0 }}{% else %}0{% endif %}</td>
-				<td><button type="button" onclick="location.href='./update.html'">Update</button></td>
-				<td><button type="button" onclick="location.href='./delete.html'">Delete</button></td>
-			</tr>
-			{% endfor %}
-		</table>
-{% endblock %}
 
 {% block employees_table %}
 	<h3>Employees</h3>
@@ -58,7 +29,7 @@
           <h3>Add an Employee</h3>
         </div>
          <div class="modal-body">
-            <form id="add_employee" action="/addEmployee" method="post">
+            <form id="add_employee" action="/addEmployee/{{ dealership_id }}" method="post">
             First Name: <input type="text" name="fname"><br>
             Last Name: <input type="text" name="lname"><br>
             Position: <input type="text" name="position"><br>
@@ -98,7 +69,7 @@
 		</tr>
 		{% for v in vehicles %}
 		<tr>
-			<td>{{ v.1 }}</td>
+			<td><a href="/selectVehicle/{{ dealership_id }}/{{ v.1 }}">{{ v.1 }}</a></td>
 			<td>{{ v.2 }}</td>
 			<td>{{ v.3 }}</td>
 		</tr>
@@ -117,12 +88,13 @@
           <h3>Add a Vehicle</h3>
         </div>
          <div class="modal-body">
-            <form id="add_vehicle" action="/addVehicle" method="post">
-            Type: <select name="type">
+            <form id="add_vehicle" action="/addVehicle/{{ dealership_id }}" method="post">
+				Type: <input type="text" name="type" list="types">
+				<datalist id="types">
 					{% for t in types %}
-						<option value"{{ t.0 }}">{{ p[1] }}</option>
+					<option>{{ t.0 }}</option>
 					{% endfor %}
-				</select><br>
+				</datalist><br>
             VIN: <input type="text" name="vin"><br>
             <input type="submit" value="Submit">
             </form><br/>

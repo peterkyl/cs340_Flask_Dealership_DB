@@ -1,0 +1,96 @@
+{% extends "select.html" %}
+
+{% block title %}{{ dealership.0.0 }}{% endblock %}
+
+{% block vehicles_table %}
+<table>
+	<tr>
+		<th>ID</th>
+		<th>Type</th>
+		<th>vin</th>
+	</tr>
+	{% for v in vehicles %}
+	<tr>
+		<td>{{ v.1 }}</td>
+		<td>{{ v.2 }}</td>
+		<td>{{ v.3 }}</td>
+	</tr>
+	{% endfor %}
+</table>
+{% endblock %}
+
+{% block features_table %}
+<h3>Features</h3>
+<table>
+	<tr>
+		<th>Name</th>
+		<th>Value</th>
+		<th>Description</th>
+	</tr>
+	{% for f in features %}
+	<tr>
+		<td>{{ f.0 }}</td>
+		<td>{{ f.1 }}</td>
+		<td>{{ f.2 }}</td>
+	</tr>
+	{% endfor %}
+</table>
+{% endblock %}
+
+{% block add_form_feature %}
+<div><button type="button" id="add-btn-feature">Add</button></div>
+<div id="modal-backdrop-feature" class="hidden backdrop"></div>
+<div id="add-form-modal-feature" class="hidden modal">
+	<div class="modal-dialog">
+		<div class="modal-header"><h3>Add a Feature to the vehicle</h3></div>
+		<div class="modal-body">
+			<h4>Existing Feature</h4>
+			<form id="add_existing_feature" action="/addExistingFeature/{{ dealership_id }}/{{ vehicles.0.1 }}" method="post">
+			Feature: <select id="existing_feature" name="existing_feature">
+				{% for a in allfeatures %}
+				<option value="{{ a.0 }}">{{ a.1 }}</option>
+				{% endfor %}
+			</select><br>
+			<spam id="feature-description"></spam><br>
+			Value: <input type="text" name="existing_value"><br>
+			<input type="submit" value="Submit">
+			</form></br>
+			<!-- This uses JQuery for the 'data' function which allows storing the array of descriptions easily in html.
+		  The descriptions are put in the spam element above when onchange triggers in the script below. -->
+			<div id="descriptions" data-stuff='[{% for d in allfeatures %}"{{ d.2 }}",{% endfor %}"last element"]'></div>
+
+			<h4>New Feature</h4>
+			<form id="add_new_feature" action="/addNewFeature/{{ dealership_id }}/{{ vehicles.0.1 }}" method="post">
+			Feature: <input type="text" name="new_feature"><br>
+			Description: <textarea rows="1" cols="15" name="new_description"></textarea><br>
+			Value: <input type="text" name="new_value"><br>
+			<input type="submit" value="Submit">
+			</form><br/>
+	</div>
+</div>
+<script>
+      var add_btn = document.getElementById('add-btn-feature');
+      add_btn.addEventListener('click', toggleModalFea)
+      var modal = document.getElementById('add-form-modal-feature');
+      modal.addEventListener('click', modalEventListenerFea);
+		var feature_description = document.getElementById('feature-description');
+		var descriptions = $('#descriptions').data('stuff');
+		document.getElementById('existing_feature').onchange = updateDescription;
+
+      function modalEventListenerFea(event){
+         if (event.target.id === "add-form-modal-feature") //if you click on the backdrop it closes the modal
+            toggleModalFea();
+      }
+
+      function toggleModalFea(){
+         var modalBackdrop = document.getElementById('modal-backdrop-feature');
+         var modal = document.getElementById('add-form-modal-feature');
+         modalBackdrop.classList.toggle('hidden');
+         modal.classList.toggle('hidden');
+      }
+
+		function updateDescription(){
+			feature_description.textContent = descriptions[this.value - 1];
+		}
+</script>
+{% endblock %}

@@ -3,6 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" media="screen">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<title>{% block title %}Generic Dealership Site{% endblock %}</title>
 </head>
 <body>
@@ -23,6 +24,11 @@
 	<div id="vehicles_table">
 		{% block vehicles_table %}{% endblock %}
 		{% block add_form_vehicle %}{% endblock %}
+	</div>
+
+	<div id="features_table">
+		{% block features_table %}{% endblock %}
+		{% block add_form_feature %}{% endblock %}
 	</div>
 
 </body>
