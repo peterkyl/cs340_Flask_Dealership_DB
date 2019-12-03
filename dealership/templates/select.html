@@ -1,0 +1,32 @@
+{% extends "main.html" %}
+
+{% block title %}{{ dealership.0.0 }}{% endblock %}
+
+{% block dealership_table %}
+<table>
+	<tr>
+		<th>dealership_name</th>
+      <th>hours</th>
+      <th>address</th>
+      <th>city</th>
+      <th>zip</th>
+      <th>country</th>
+      <th>num_employees</th>
+      <th>num_vehicles</th>
+	</tr>
+   {% for r in dealership %}
+   <tr>
+		<td>{{ r.0 }}</td>
+      <td>{{ r.1 }}</td>
+      <td>{{ r.2 }} {% if r.3 %}{{ r.3 }}{% endif %}</td>
+      <td>{{ r.4 }}</td>
+      <td>{{ r.5 }}</td>
+      <td>{{ r.6 }}</td>
+      <td>{% if employees.0 %}{{ employees.0.0 }}{% else %}0{% endif %}</td>
+      <td>{% if vehicles.0 %}{{ vehicles.0.0 }}{% else %}0{% endif %}</td>
+      <td><button type="button" onclick="location.href='./update.html'">Update</button></td>
+      <td><button type="button" onclick="location.href='./delete.html'">Delete</button></td>
+	</tr>
+   {% endfor %}
+</table>
+{% endblock %}	
