@@ -176,6 +176,54 @@ def delete_feature(dealership_id, vehicle_id, feature_id):
 	result = execute_query(db_connection, query, data)
 	return redirect('selectVehicle/' + str(dealership_id) + '/' + str(vehicle_id))
 
+### UPDATE ROUTES
+
+@webapp.route('/updateDealership/<int:dealership_id>', methods=['POST'])
+def update_dealership(dealership_id):
+	db_connection = connect_to_database();
+	address1 = request.form['address1']
+	address2 = request.form['address2']
+	city = request.form['city']
+	ZIP = request.form['ZIP']
+	country = request.form['country']
+	hours = request.form['hours']
+	dealership_name = request.form['dealership_name']
+	query = "UPDATE dealership, dealership_address SET dealership_name = %s, hours = %s, address_line_1 = %s, address_line_2 = %s, city = %s, zip = %s, country = %s WHERE dealership_id = %s AND dealership_address.address_id = (SELECT address_id FROM dealership WHERE dealership_id = %s)"
+	data = (dealership_name, hours, address1, address2, cit, zip, country, dealership_id, dealership_id)
+	execute_query(db_connection, query, data)
+	return redirect('/')
+
+@webapp.route('/updateEmployee/<int:dealership_id>/<int:employee_id>', methods=['POST'])
+def update_employee(dealership_id, employee_id):
+	db_connection = connect_to_database();
+	fname = request.form['fname']
+	lname = request.form['lname']
+	position = request.form['position']
+	query = "UPDATE employees SET fname = %s, lname = %s, position = %s WHERE employee_id = %s"
+	data = (fname, lname, position, employee_id)
+	execute_query(db_connection, query, data)
+	return redirect('selectDealership/' + str(dealership_id))
+
+@webapp.route('/updateVehicle/<int:dealership_id>/<int:vehicle_id>', methods=['POST'])
+def update_vehicle(dealership_id, vehicle_id):
+	db_connection = connect_to_database();
+	vehicle_type = request.form['type']
+	vin = request.form['vin']
+	query = "UPDATE vehicle SET type = %s, vin = %s WHERE vehicle_id = %s"
+	data = (vehicle_type, vin, vehicle_id)
+	execute_query(db_connection, query, data)
+	return redirect('selectDealership/' + str(dealership_id))
+
+@webapp.route('/updateFeature/<int:dealership_id>/<int:vehicle_id>/<int:feature_id>', methods=['POST'])
+def update_feature(dealership_id, vehicle_id, feature_id):
+	db_connection = connect_to_database();
+	value = request.form['value']
+	query = "UPDATE vehicle_feature SET feature_value = %s WHERE vehicle_id = %s AND feature_id = %s"
+	data = (value, vehicle_id, feature_id)
+	execute_query(db_connection, query, data)
+	return redirect('selectVehicle/' + str(dealership_id) + '/' + str(vehicle_id))
+
+
 
 
 
@@ -202,14 +250,6 @@ def add_new_people():
         data = (fname, lname, age, homeworld)
         execute_query(db_connection, query, data)
         return ('Person added!');
-
-@webapp.route('/db-test')
-def test_database_connection():
-    print("Executing a sample query on the database using the credentials from db_credentials.py")
-    db_connection = connect_to_database()
-    query = "SELECT * from bsg_people;"
-    result = execute_query(db_connection, query);
-    return render_template('db_test.html', rows=result)
 
 #display update form and process any updates, using the same function
 @webapp.route('/update_people/<int:id>', methods=['POST','GET'])
@@ -243,13 +283,3 @@ def update_people(id):
         print(str(result.rowcount) + " row(s) updated");
 
         return redirect('/browse_bsg_people')
-
-@webapp.route('/delete_people/<int:id>')
-def delete_people(id):
-    '''deletes a person with the given id'''
-    db_connection = connect_to_database()
-    query = "DELETE FROM bsg_people WHERE character_id = %s"
-    data = (id,)
-
-    result = execute_query(db_connection, query, data)
-    return (str(result.rowcount) + "row deleted")

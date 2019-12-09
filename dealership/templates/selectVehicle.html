@@ -34,7 +34,7 @@
 		<td>{{ f.0 }}</td>
 		<td>{{ f.1 }}</td>
 		<td>{{ f.2 }}</td>
-		<td><button type="button" onclick="location.href='/updateFeature/{{ dealership_id }}/{{ vehicles.0.1 }}/{{ f.3 }}'">Update</button></td>
+		<td><button type="button" onclick="updateListener('{{ f.3 }}', '{{ f.0 }}', '{{ f.2 }}', '{{ f.1 }}')">Update</button></td>
       <td><button type="button" onclick="location.href='/deleteFeature/{{ dealership_id }}/{{ vehicles.0.1 }}/{{ f.3 }}'">Delete</button></td>
 	</tr>
 	{% endfor %}
@@ -43,7 +43,7 @@
 
 {% block add_form_feature %}
 <div><button type="button" id="add-btn-feature">Add</button></div>
-<div id="modal-backdrop-feature" class="hidden backdrop"></div>
+<div id="modal-backdrop" class="hidden backdrop"></div>
 <div id="add-form-modal-feature" class="hidden modal">
 	<div class="modal-dialog">
 		<div class="modal-header"><h3>Add a Feature to the vehicle</h3></div>
@@ -70,6 +70,7 @@
 			Value: <input type="text" name="new_value"><br>
 			<input type="submit" value="Submit">
 			</form><br/>
+		</div>
 	</div>
 </div>
 <script>
@@ -87,7 +88,7 @@
       }
 
       function toggleModalFea(){
-         var modalBackdrop = document.getElementById('modal-backdrop-feature');
+         var modalBackdrop = document.getElementById('modal-backdrop');
          var modal = document.getElementById('add-form-modal-feature');
          modalBackdrop.classList.toggle('hidden');
          modal.classList.toggle('hidden');
@@ -96,5 +97,58 @@
 		function updateDescription(){
 			feature_description.textContent = descriptions[this.value - 1];
 		}
+</script>
+{% endblock %}
+
+{% block update_form_feature %}
+<div id="update-form-modal-feature" class="hidden modal">
+	<div class="modal-dialog">
+		<div class="modal-header"><h3>Update a Feature to the vehicle</h3></div>
+		<div id="update-form-body" class="modal-body">
+			<p id="update-feature-name"></p>
+			<p id="update-feature-description"></p>
+		</div>
+	</div>
+</div>
+<script>
+	var modal = document.getElementById('update-form-modal-feature');
+	modal.addEventListener('click', modalEventListenerUpdate);
+
+	function updateListener(id, name, description, value){
+		var f = document.createElement("form");
+		f.setAttribute('id', "update-form");
+		f.setAttribute('method', "post");
+		f.setAttribute('action', "/updateFeature/{{ dealership_id }}/{{vehicles.0.1 }}/" + id);
+		var i = document.createElement("input");
+		i.setAttribute('type', "text");
+		i.setAttribute('name', "value");
+		i.setAttribute('value', value);
+		var s = document.createElement("input");
+		s.setAttribute('type', "submit");
+		s.setAttribute('value', "Submit");
+		f.appendChild(i);
+		f.appendChild(s);
+
+		document.getElementById('update-form-body').appendChild(f);
+		document.getElementById('update-feature-name').innerHTML = name;
+		document.getElementById('update-feature-description').innerHTML = description;
+		toggleModalUpdate();
+	}
+
+	function modalEventListenerUpdate(event){
+		if (event.target.id === "update-form-modal-feature")
+			toggleModalUpdate();
+	}
+
+   function toggleModalUpdate(){
+      var modalBackdrop = document.getElementById('modal-backdrop');
+      var modal = document.getElementById('update-form-modal-feature');
+      modalBackdrop.classList.toggle('hidden');
+      modal.classList.toggle('hidden');
+		if (modal.classList.contains('hidden')){
+			var f = document.getElementById('update-form');
+			f.remove();
+		}
+   }
 </script>
 {% endblock %}
