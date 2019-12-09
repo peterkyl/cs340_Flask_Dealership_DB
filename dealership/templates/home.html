@@ -20,7 +20,7 @@
 				<td>{{ r.4 }}</td>
 				<td>{{ r.5 }}</td>
 				<td>{{ r.6 }}</td>
-				<td><button type="button" onclick="location.href='/updateDealership/{{ r.7 }}'">Update</button></td>
+				<td><button type="button" onclick="updateListenerDealership('{{ r.7 }}', '{{ r.0 }}', '{{ r.1 }}', '{{ r.2 }}', '{{ r.3 }}', '{{ r.4 }}', '{{ r.5 }}', '{{ r.6 }}')">Update</button></td>
 				<td><button type="button" onclick="location.href='/deleteDealership/{{ r.7 }}'">Delete</button></td>
 			</tr>
 			{% endfor %}
@@ -69,4 +69,83 @@
 			modal.classList.toggle('hidden');
 		}
 	</script>
+{% endblock %}
+
+{% block update_form_dealership %}
+<div id="update-form-modal-dealership" class="hidden modal">
+	<div class="modal-dialog">
+		<div class="modal-header"><h3>Update a Feature to the vehicle</h3></div>
+		<div id="update-form-body" class="modal-body">
+		</div>
+	</div>
+</div>
+<script>
+	var modal = document.getElementById('update-form-modal-dealership');
+	modal.addEventListener('click', modalEventListenerUpdateDealership);
+
+	function updateListenerDealership(id, dealership_name, hours, address1, address2, city, zip, country){
+		var f = document.createElement("form");
+		f.setAttribute('id', "update-form");
+		f.setAttribute('method', "post");
+		f.setAttribute('action', "/updateDealership/" + id);
+		var i1 = document.createElement("input");
+		i1.setAttribute('type', "text");
+		i1.setAttribute('name', "dealership_name");
+		i1.setAttribute('value', dealership_name);
+		var i2 = document.createElement("input");
+		i2.setAttribute('type', "text");
+		i2.setAttribute('name', "hours");
+		i2.setAttribute('value', hours);
+		var i3 = document.createElement("input");
+		i3.setAttribute('type', "text");
+		i3.setAttribute('name', "address1");
+		i3.setAttribute('value', address1);
+		var i4 = document.createElement("input");
+		i4.setAttribute('type', "text");
+		i4.setAttribute('name', "address2");
+		i4.setAttribute('value', address2);
+		var i5 = document.createElement("input");
+		i5.setAttribute('type', "text");
+		i5.setAttribute('name', "city");
+		i5.setAttribute('value', city);
+		var i6 = document.createElement("input");
+		i6.setAttribute('type', "text");
+		i6.setAttribute('name', "ZIP");
+		i6.setAttribute('value', zip);
+		var i7 = document.createElement("input");
+		i7.setAttribute('type', "text");
+		i7.setAttribute('name', "country");
+		i7.setAttribute('value', country);
+		var s = document.createElement("input");
+		s.setAttribute('type', "submit");
+		s.setAttribute('value', "Submit");
+		f.appendChild(i1);
+		f.appendChild(i2);
+		f.appendChild(i3);
+		f.appendChild(i4);
+		f.appendChild(i5);
+		f.appendChild(i6);
+		f.appendChild(i7);
+		f.appendChild(s);
+
+		document.getElementById('update-form-body').appendChild(f);
+		toggleModalUpdateDealership();
+	}
+
+	function modalEventListenerUpdateDealership(event){
+		if (event.target.id === "update-form-modal-dealership")
+			toggleModalUpdateDealership();
+	}
+
+   function toggleModalUpdateDealership(){
+      var modalBackdrop = document.getElementById('modal-backdrop');
+      var modal = document.getElementById('update-form-modal-dealership');
+      modalBackdrop.classList.toggle('hidden');
+      modal.classList.toggle('hidden');
+		if (modal.classList.contains('hidden')){
+			var f = document.getElementById('update-form');
+			f.remove();
+		}
+   }
+</script>
 {% endblock %}

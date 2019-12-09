@@ -80,21 +80,18 @@ def add_dealership():
 @webapp.route('/addEmployee/<int:dealership_id>', methods=['POST'])
 def add_employee(dealership_id):
 	db_connection = connect_to_database()
-	print("Add new employee!")
 	fname = request.form['fname']
 	lname = request.form['lname']
 	position = request.form['position']
 	employee_query = 'INSERT INTO employees (dealership_id, f_name, l_name, position) VALUES (%s, %s, %s, %s)'
 	employee_data = (dealership_id, fname, lname, position)
 	execute_query(db_connection, employee_query, employee_data)
-	print("inserted employee")
 	return redirect('selectDealership/' + str(dealership_id))
 
 
 @webapp.route('/addVehicle/<int:dealership_id>', methods=['POST'])
 def add_vehicle(dealership_id):
 	db_connection = connect_to_database()
-	print("Add new vehicle!")
 	veh_type = request.form['type']
 	vin = request.form['vin']
 
@@ -104,11 +101,9 @@ def add_vehicle(dealership_id):
 	execute_query(db_connection, types_query, [types_data])
 	type_id_query = "SELECT type_id FROM vehicle_type WHERE type_name = %s"
 	type_id = execute_query(db_connection, type_id_query, [types_data]).fetchone();
-	print("type insert complete")
 
 	vehicle_query = "INSERT INTO vehicle (dealership_id, type, vin) VALUES (%s, %s, %s)"
 	vehicle_data = (dealership_id, type_id, vin)
-	print(vehicle_data)
 	execute_query(db_connection, vehicle_query, vehicle_data)
 
 #ADD FEATURES???
@@ -189,7 +184,7 @@ def update_dealership(dealership_id):
 	hours = request.form['hours']
 	dealership_name = request.form['dealership_name']
 	query = "UPDATE dealership, dealership_address SET dealership_name = %s, hours = %s, address_line_1 = %s, address_line_2 = %s, city = %s, zip = %s, country = %s WHERE dealership_id = %s AND dealership_address.address_id = (SELECT address_id FROM dealership WHERE dealership_id = %s)"
-	data = (dealership_name, hours, address1, address2, cit, zip, country, dealership_id, dealership_id)
+	data = (dealership_name, hours, address1, address2, city, ZIP, country, dealership_id, dealership_id)
 	execute_query(db_connection, query, data)
 	return redirect('/')
 
@@ -199,7 +194,7 @@ def update_employee(dealership_id, employee_id):
 	fname = request.form['fname']
 	lname = request.form['lname']
 	position = request.form['position']
-	query = "UPDATE employees SET fname = %s, lname = %s, position = %s WHERE employee_id = %s"
+	query = "UPDATE employees SET f_name = %s, l_name = %s, position = %s WHERE employee_id = %s"
 	data = (fname, lname, position, employee_id)
 	execute_query(db_connection, query, data)
 	return redirect('selectDealership/' + str(dealership_id))
@@ -209,8 +204,15 @@ def update_vehicle(dealership_id, vehicle_id):
 	db_connection = connect_to_database();
 	vehicle_type = request.form['type']
 	vin = request.form['vin']
+	#add type to table if new
+	types_query = "INSERT IGNORE INTO vehicle_type (type_name) VALUES (%s)"
+	types_data = (vehicle_type)
+	execute_query(db_connection, types_query, [types_data])
+	type_id_query = "SELECT type_id FROM vehicle_type WHERE type_name = %s"
+	type_id = execute_query(db_connection, type_id_query, [types_data]).fetchone();
+
 	query = "UPDATE vehicle SET type = %s, vin = %s WHERE vehicle_id = %s"
-	data = (vehicle_type, vin, vehicle_id)
+	data = (type_id, vin, vehicle_id)
 	execute_query(db_connection, query, data)
 	return redirect('selectDealership/' + str(dealership_id))
 

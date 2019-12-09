@@ -13,7 +13,7 @@
 		<tr>
 			<td>{{ e.1 }} {{ e.2 }}</td>
 			<td>{{ e.3 }}</td>
-			<td><button type="button" onclick="location.href='/updateEmployee/{{ dealership_id }}/{{ e.4 }}'">Update</button></td>
+			<td><button type="button" onclick="updateListenerEmployee({{ e.4 }}, '{{ e.1 }}', '{{ e.2 }}', '{{ e.3 }}')">Update</button></td>
       	<td><button type="button" onclick="location.href='/deleteEmployee/{{ dealership_id }}/{{ e.4 }}'">Delete</button></td>
 		</tr>
 		{% endfor %}
@@ -24,7 +24,7 @@
    <div>
       <button type="button" id="add-btn-employee">Add</button>
    </div>
-   <div id="modal-backdrop-employee" class="hidden backdrop"></div>
+   <div id="modal-backdrop" class="hidden backdrop"></div>
    <div id="add-form-modal-employee" class="hidden modal">
       <div class="modal-dialog">
         <div class="modal-header">
@@ -52,7 +52,7 @@
       }
 
       function toggleModalEmp(){
-         var modalBackdrop = document.getElementById('modal-backdrop-employee');
+         var modalBackdrop = document.getElementById('modal-backdrop');
          var modal = document.getElementById('add-form-modal-employee');
          modalBackdrop.classList.toggle('hidden');
          modal.classList.toggle('hidden');
@@ -60,6 +60,64 @@
    </script>
 {% endblock %}
 
+{% block update_form_employee %}
+<div id="update-form-modal-employee" class="hidden modal">
+	<div class="modal-dialog">
+		<div class="modal-header"><h3>Update a Feature to the vehicle</h3></div>
+		<div id="update-form-body-employee" class="modal-body">
+		</div>
+	</div>
+</div>
+<script>
+	var modal = document.getElementById('update-form-modal-employee');
+	modal.addEventListener('click', modalEventListenerUpdateEmployee);
+
+	function updateListenerEmployee(id, fname, lname, position){
+		var f = document.createElement("form");
+		f.setAttribute('id', "update-form-employee");
+		f.setAttribute('method', "post");
+		f.setAttribute('action', "/updateEmployee/{{ dealership_id }}/" + id);
+		var i1 = document.createElement("input");
+		i1.setAttribute('type', "text");
+		i1.setAttribute('name', "fname");
+		i1.setAttribute('value', fname);
+		var i2 = document.createElement("input");
+		i2.setAttribute('type', "text");
+		i2.setAttribute('name', "lname");
+		i2.setAttribute('value', lname);
+		var i3 = document.createElement("input");
+		i3.setAttribute('type', "text");
+		i3.setAttribute('name', "position");
+		i3.setAttribute('value', position);
+		var s = document.createElement("input");
+		s.setAttribute('type', "submit");
+		s.setAttribute('value', "Submit");
+		f.appendChild(i1);
+		f.appendChild(i2);
+		f.appendChild(i3);
+		f.appendChild(s);
+
+		document.getElementById('update-form-body-employee').appendChild(f);
+		toggleModalUpdateEmployee();
+	}
+
+	function modalEventListenerUpdateEmployee(event){
+		if (event.target.id === "update-form-modal-employee")
+			toggleModalUpdateEmployee();
+	}
+
+   function toggleModalUpdateEmployee(){
+      var modalBackdrop = document.getElementById('modal-backdrop');
+      var modal = document.getElementById('update-form-modal-employee');
+      modalBackdrop.classList.toggle('hidden');
+      modal.classList.toggle('hidden');
+		if (modal.classList.contains('hidden')){
+			var f = document.getElementById('update-form-employee');
+			f.remove();
+		}
+   }
+</script>
+{% endblock %}
 
 {% block vehicles_table %}
 	<h3>Vehicles</h3>
@@ -74,7 +132,7 @@
 			<td><a href="/selectVehicle/{{ dealership_id }}/{{ v.1 }}">{{ v.1 }}</a></td>
 			<td>{{ v.2 }}</td>
 			<td>{{ v.3 }}</td>
-			<td><button type="button" onclick="location.href='/updateVehicle/{{ dealership_id }}/{{ v.1 }}'">Update</button></td>
+			<td><button type="button" onclick="updateListenerVehicle({{ v.1 }}, '{{ v.2 }}', '{{ v.3 }}')">Update</button></td>
 			<td><button type="button" onclick="location.href='/deleteVehicle/{{ dealership_id }}/{{ v.1 }}'">Delete</button></td>
 		</tr>
 		{% endfor %}
@@ -123,5 +181,59 @@
          modal.classList.toggle('hidden');
       }
    </script>
+{% endblock %}
+
+{% block update_form_vehicle %}
+<div id="update-form-modal-vehicle" class="hidden modal">
+	<div class="modal-dialog">
+		<div class="modal-header"><h3>Update a Feature to the vehicle</h3></div>
+		<div id="update-form-body-vehicle" class="modal-body">
+		</div>
+	</div>
+</div>
+<script>
+	var modal = document.getElementById('update-form-modal-vehicle');
+	modal.addEventListener('click', modalEventListenerUpdateVehicle);
+
+	function updateListenerVehicle(id, type, vin){
+		var f = document.createElement("form");
+		f.setAttribute('id', "update-form-vehicle");
+		f.setAttribute('method', "post");
+		f.setAttribute('action', "/updateVehicle/{{ dealership_id }}/" + id);
+		var i1 = document.createElement("input");
+		i1.setAttribute('type', "text");
+		i1.setAttribute('name', "type");
+		i1.setAttribute('value', type);
+		var i2 = document.createElement("input");
+		i2.setAttribute('type', "text");
+		i2.setAttribute('name', "vin");
+		i2.setAttribute('value', vin);
+		var s = document.createElement("input");
+		s.setAttribute('type', "submit");
+		s.setAttribute('value', "Submit");
+		f.appendChild(i1);
+		f.appendChild(i2)
+		f.appendChild(s);
+
+		document.getElementById('update-form-body-vehicle').appendChild(f);
+		toggleModalUpdateVehicle();
+	}
+
+	function modalEventListenerUpdateVehicle(event){
+		if (event.target.id === "update-form-modal-vehicle")
+			toggleModalUpdateVehicle();
+	}
+
+   function toggleModalUpdateVehicle(){
+      var modalBackdrop = document.getElementById('modal-backdrop-vehicle');
+      var modal = document.getElementById('update-form-modal-vehicle');
+      modalBackdrop.classList.toggle('hidden');
+      modal.classList.toggle('hidden');
+		if (modal.classList.contains('hidden')){
+			var f = document.getElementById('update-form-vehicle');
+			f.remove();
+		}
+   }
+</script>
 {% endblock %}
 
