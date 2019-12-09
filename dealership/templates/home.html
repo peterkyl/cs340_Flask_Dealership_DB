@@ -20,8 +20,8 @@
 				<td>{{ r.4 }}</td>
 				<td>{{ r.5 }}</td>
 				<td>{{ r.6 }}</td>
-				<td><button type="button" onclick="location.href='./'">Update</button></td>
-				<td><button type="button" onclick="location.href='./'">Delete</button></td>
+				<td><button type="button" onclick="location.href='/updateDealership/{{ r.7 }}'">Update</button></td>
+				<td><button type="button" onclick="location.href='/deleteDealership/{{ r.7 }}'">Delete</button></td>
 			</tr>
 			{% endfor %}
 		</table>

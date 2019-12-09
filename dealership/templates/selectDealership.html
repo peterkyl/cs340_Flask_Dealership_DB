@@ -13,6 +13,8 @@
 		<tr>
 			<td>{{ e.1 }} {{ e.2 }}</td>
 			<td>{{ e.3 }}</td>
+			<td><button type="button" onclick="location.href='/updateEmployee/{{ dealership_id }}/{{ e.4 }}'">Update</button></td>
+      	<td><button type="button" onclick="location.href='/deleteEmployee/{{ dealership_id }}/{{ e.4 }}'">Delete</button></td>
 		</tr>
 		{% endfor %}
 	</table>
@@ -72,6 +74,8 @@
 			<td><a href="/selectVehicle/{{ dealership_id }}/{{ v.1 }}">{{ v.1 }}</a></td>
 			<td>{{ v.2 }}</td>
 			<td>{{ v.3 }}</td>
+			<td><button type="button" onclick="location.href='/updateVehicle/{{ dealership_id }}/{{ v.1 }}'">Update</button></td>
+			<td><button type="button" onclick="location.href='/deleteVehicle/{{ dealership_id }}/{{ v.1 }}'">Delete</button></td>
 		</tr>
 		{% endfor %}
 	</table>
