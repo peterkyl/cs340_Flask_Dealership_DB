@@ -2,6 +2,8 @@
 
 {% block title %}{{ dealership.0.0 }}{% endblock %}
 
+{% block back_button %}<a href="/selectDealership/{{ dealership_id }}">Back</a>{% endblock %}
+
 {% block vehicles_table %}
 <table>
 	<tr>
@@ -32,6 +34,8 @@
 		<td>{{ f.0 }}</td>
 		<td>{{ f.1 }}</td>
 		<td>{{ f.2 }}</td>
+		<td><button type="button" onclick="location.href='/updateFeature/{{ dealership_id }}/{{ vehicles.0.1 }}/{{ f.3 }}'">Update</button></td>
+      <td><button type="button" onclick="location.href='/deleteFeature/{{ dealership_id }}/{{ vehicles.0.1 }}/{{ f.3 }}'">Delete</button></td>
 	</tr>
 	{% endfor %}
 </table>
