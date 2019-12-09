@@ -23,6 +23,7 @@
 
 {% block features_table %}
 <h3>Features</h3>
+<form action="/selectVehicle/{{ dealership_id }}/{{ vehicles.0.1 }}" method="post"><input type="text" placeholder="Search Name" name="search"></form>
 <table>
 	<tr>
 		<th>Name</th>

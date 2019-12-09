@@ -4,6 +4,7 @@
 
 {% block employees_table %}
 	<h3>Employees</h3>
+	<form id="search-emp" action="/selectDealership/{{ dealership_id }}" method="post"><input type="text" placeholder="Search Name" name="search_emp"></form>
 	<table>
 		<tr>
 			<th>Name</th>
@@ -121,6 +122,7 @@
 
 {% block vehicles_table %}
 	<h3>Vehicles</h3>
+	<form id="search-veh" action="/selectDealership/{{ dealership_id }}" method="post"><input type="text" placeholder="Search VIN" name="search_veh"></form>
 	<table>
 		<tr>
 			<th>ID</th>

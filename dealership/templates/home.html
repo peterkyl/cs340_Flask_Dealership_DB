@@ -2,6 +2,12 @@
 
 {% block title %}Generic Dealership Site{% endblock %}
 
+{% block search_dealership %}
+<form action="/" method="post">
+	<input type="text" placeholder="Search Name" name="search">
+</form>
+{% endblock %}
+
 {% block dealership_table %}
 		<table>
 			<tr>

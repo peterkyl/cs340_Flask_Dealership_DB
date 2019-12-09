@@ -4,24 +4,34 @@ from db_connector.db_connector import connect_to_database, execute_query
 #create the web application
 webapp = Flask(__name__)
 
-@webapp.route('/')
+@webapp.route('/', methods=['GET','POST'])
 def all_dealerships():
-    db_connection = connect_to_database()
-    query = "SELECT dealership_name, hours, address_line_1, address_line_2, city, zip, country, dealership_id FROM dealership INNER JOIN dealership_address USING (address_id);"
-    result = execute_query(db_connection, query).fetchall();
-    return render_template('home.html', rows=result)
+	db_connection = connect_to_database();
+	search = ''
+	if request.method == 'POST':
+		search = request.form['search']
+	query = "SELECT dealership_name, hours, address_line_1, address_line_2, city, zip, country, dealership_id FROM dealership INNER JOIN dealership_address USING (address_id) WHERE INSTR(dealership_name, '%s')" % (search)
+	result = execute_query(db_connection, query).fetchall();
+	return render_template('home.html', rows=result)
 
 
-@webapp.route('/selectDealership/<int:dealership_id>')
+@webapp.route('/selectDealership/<int:dealership_id>', methods=['GET', 'POST'])
 def select_dealership(dealership_id):
-	db_connection = connect_to_database()
+	db_connection = connect_to_database();
+	search_emp = ''
+	search_veh = ''
+	if request.method == 'POST':
+		if 'search_emp' in request.form:
+			search_emp = request.form['search_emp']
+		if 'search_veh' in request.form:
+			search_veh = request.form['search_veh']
 	dealership_query = "SELECT dealership_name, hours, address_line_1, address_line_2, city, zip, country FROM dealership  INNER JOIN dealership_address USING (address_id) WHERE dealership_id = %s;" % (dealership_id)
 	dealership = execute_query(db_connection, dealership_query).fetchall();
 
-	employees_query = "SELECT num_employees, f_name, l_name, position, employee_id FROM (SELECT COUNT(employee_id) AS num_employees, dealership_id FROM employees WHERE dealership_id = %s) AS tabl1 INNER JOIN (SELECT f_name, l_name, position, employee_id, dealership_id FROM employees WHERE dealership_id = %s) AS tabl2 USING (dealership_id);" % (dealership_id, dealership_id)
+	employees_query = "SELECT num_employees, f_name, l_name, position, employee_id FROM (SELECT COUNT(employee_id) AS num_employees, dealership_id FROM employees WHERE dealership_id = %s) AS tabl1 INNER JOIN (SELECT f_name, l_name, position, employee_id, dealership_id FROM employees WHERE dealership_id = %s) AS tabl2 USING (dealership_id) WHERE INSTR(f_name, '%s') OR INSTR(l_name, '%s');" % (dealership_id, dealership_id, search_emp, search_emp)
 	employees = execute_query(db_connection, employees_query).fetchall();
 
-	vehicles_query = "SELECT num_vehicles, vehicle_id, type_name, vin FROM (SELECT vehicle_id, type_name, vin, dealership_id FROM vehicle INNER JOIN vehicle_type ON type=type_id WHERE dealership_id = %s) AS tabl1 INNER JOIN (SELECT COUNT(vehicle_id) AS num_vehicles, dealership_id FROM vehicle WHERE dealership_id = %s) AS tabl2 USING (dealership_id);" % (dealership_id, dealership_id)
+	vehicles_query = "SELECT num_vehicles, vehicle_id, type_name, vin FROM (SELECT vehicle_id, type_name, vin, dealership_id FROM vehicle INNER JOIN vehicle_type ON type=type_id WHERE dealership_id = %s) AS tabl1 INNER JOIN (SELECT COUNT(vehicle_id) AS num_vehicles, dealership_id FROM vehicle WHERE dealership_id = %s) AS tabl2 USING (dealership_id) WHERE INSTR(vin, '%s');" % (dealership_id, dealership_id, search_veh)
 	vehicles = execute_query(db_connection, vehicles_query).fetchall();
 
 	types_query = 'SELECT type_name FROM vehicle_type'
@@ -29,9 +39,12 @@ def select_dealership(dealership_id):
 	return render_template('selectDealership.html', employees=employees, vehicles=vehicles, dealership=dealership, dealership_id = dealership_id, types=types)
 
 
-@webapp.route('/selectVehicle/<int:dealership_id>/<int:vehicle_id>')
+@webapp.route('/selectVehicle/<int:dealership_id>/<int:vehicle_id>', methods=['Get', 'POST'])
 def select_vehicle(dealership_id, vehicle_id):
-	db_connection = connect_to_database()
+	db_connection = connect_to_database();
+	search = ''
+	if request.method == 'POST':
+		search = request.form['search']
 	dealership_query = "SELECT dealership_name, hours, address_line_1, address_line_2, city, zip, country FROM dealership  INNER JOIN dealership_address USING (address_id) WHERE dealership_id = %s;" % (dealership_id)
 	dealership = execute_query(db_connection, dealership_query).fetchall();
 
@@ -41,7 +54,7 @@ def select_vehicle(dealership_id, vehicle_id):
 	vehicles_query = "SELECT num_vehicles, vehicle_id, type_name, vin FROM (SELECT vehicle_id, type_name, vin, dealership_id FROM vehicle INNER JOIN vehicle_type ON type=type_id WHERE vehicle_id = %s) AS tabl1 INNER JOIN (SELECT COUNT(vehicle_id) AS num_vehicles, dealership_id FROM vehicle WHERE dealership_id = %s) AS tabl2 USING (dealership_id);" % (vehicle_id, dealership_id)
 	vehicles = execute_query(db_connection, vehicles_query).fetchall();
 
-	features_query = "SELECT feature_name, feature_value, feature_description, feature_id FROM vehicle INNER JOIN vehicle_feature USING (vehicle_id) INNER JOIN feature USING (feature_id) WHERE vehicle_id = %s" % (vehicle_id)
+	features_query = "SELECT feature_name, feature_value, feature_description, feature_id FROM vehicle INNER JOIN vehicle_feature USING (vehicle_id) INNER JOIN feature USING (feature_id) WHERE vehicle_id = %s AND INSTR(feature_name, '%s')" % (vehicle_id, search)
 	features = execute_query(db_connection, features_query).fetchall();
 
 	allfeatures_query = "SELECT feature_id, feature_name, feature_description FROM feature"
@@ -53,7 +66,7 @@ def select_vehicle(dealership_id, vehicle_id):
 
 @webapp.route('/addDealership', methods=['POST'])
 def add_dealership():
-	db_connection = connect_to_database()
+	db_connection = connect_to_database();
 	address1 = request.form['address1']
 	address2 = request.form['address2']
 	city = request.form['city']
@@ -74,7 +87,7 @@ def add_dealership():
 
 @webapp.route('/addEmployee/<int:dealership_id>', methods=['POST'])
 def add_employee(dealership_id):
-	db_connection = connect_to_database()
+	db_connection = connect_to_database();
 	fname = request.form['fname']
 	lname = request.form['lname']
 	position = request.form['position']
@@ -86,7 +99,7 @@ def add_employee(dealership_id):
 
 @webapp.route('/addVehicle/<int:dealership_id>', methods=['POST'])
 def add_vehicle(dealership_id):
-	db_connection = connect_to_database()
+	db_connection = connect_to_database();
 	veh_type = request.form['type']
 	vin = request.form['vin']
 
