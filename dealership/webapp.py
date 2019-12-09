@@ -20,7 +20,7 @@ def select_dealership(dealership_id):
 	dealership_query = "SELECT dealership_name, hours, address_line_1, address_line_2, city, zip, country FROM dealership  INNER JOIN dealership_address USING (address_id) WHERE dealership_id = %s;" % (dealership_id)
 	dealership = execute_query(db_connection, dealership_query).fetchall();
 
-	employees_query = "SELECT num_employees, f_name, l_name, position, employee_id FROM (SELECT COUNT(employee_id) AS num_employees, dealership_id FROM employees WHERE dealership_id = %s) AS tabl1 INNER JOIN (SELECT f_name, l_name, position, dealership_id FROM employees WHERE dealership_id = %s) AS tabl2 USING (dealership_id);" % (dealership_id, dealership_id)
+	employees_query = "SELECT num_employees, f_name, l_name, position, employee_id FROM (SELECT COUNT(employee_id) AS num_employees, dealership_id FROM employees WHERE dealership_id = %s) AS tabl1 INNER JOIN (SELECT f_name, l_name, position, employee_id, dealership_id FROM employees WHERE dealership_id = %s) AS tabl2 USING (dealership_id);" % (dealership_id, dealership_id)
 	employees = execute_query(db_connection, employees_query).fetchall();
 
 	vehicles_query = "SELECT num_vehicles, vehicle_id, type_name, vin FROM (SELECT vehicle_id, type_name, vin, dealership_id FROM vehicle INNER JOIN vehicle_type ON type=type_id WHERE dealership_id = %s) AS tabl1 INNER JOIN (SELECT COUNT(vehicle_id) AS num_vehicles, dealership_id FROM vehicle WHERE dealership_id = %s) AS tabl2 USING (dealership_id);" % (dealership_id, dealership_id)
@@ -161,7 +161,7 @@ def delete_employee(dealership_id, employee_id):
 	return redirect('selectDealership/' + str(dealership_id))
 
 @webapp.route('/deleteVehicle/<int:dealership_id>/<int:vehicle_id>')
-def delete_dealership(dealership_id, vehicle_id):
+def delete_vehicle(dealership_id, vehicle_id):
 	db_connection = connect_to_database();
 	query = "DELETE FROM vehicle WHERE vehicle_id = %s"
 	data = (vehicle_id,)
@@ -169,7 +169,7 @@ def delete_dealership(dealership_id, vehicle_id):
 	return redirect('selectDealership/' + str(dealership_id))
 
 @webapp.route('/deleteFeature/<int:dealership_id>/<int:vehicle_id>/<int:feature_id>')
-def delete_dealership(dealership_id, vehicle_id, feature_id):
+def delete_feature(dealership_id, vehicle_id, feature_id):
 	db_connection = connect_to_database();
 	query = "DELETE FROM vehicle_feature WHERE vehicle_id = %s AND feature_id = %s"
 	data = (vehicle_id, feature_id)
